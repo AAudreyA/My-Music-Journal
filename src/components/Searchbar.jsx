@@ -33,6 +33,7 @@ export default function SearchBar({ onSelect }) {
         placeholder="Search songs"
         value={query}
         onChange={e => setQuery(e.target.value)}
+        onKeyDown={e => e.key === "Enter" && search()}
       />
       <button className="btn" onClick={search}>Search</button>
 

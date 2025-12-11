@@ -6,21 +6,44 @@ import { auth } from "../firebaseConfig";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const login = async () => {
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-    } catch (err) {
-      console.error(err);
+  const getErrorMessage = (code) => {
+    switch (code) {
+      case "auth/invalid-credential":
+        return "Invalid email or password";
+      case "auth/email-already-in-use":
+        return "Email already in use. Try logging in instead.";
+      case "auth/weak-password":
+        return "Password must be at least 6 characters";
+      case "auth/invalid-email":
+        return "Invalid email address";
+      default:
+        return "Something went wrong. Please try again.";
     }
   };
 
+  const login = async () => {
+    setError("");
+    setLoading(true);
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (err) {
+      setError(getErrorMessage(err.code));
+    }
+    setLoading(false);
+  };
+
   const signup = async () => {
+    setError("");
+    setLoading(true);
     try {
       await createUserWithEmailAndPassword(auth, email, password);
     } catch (err) {
-      console.error(err);
+      setError(getErrorMessage(err.code));
     }
+    setLoading(false);
   };
 
   return (
@@ -38,9 +61,15 @@ export default function Login() {
           placeholder="Password 6 char or longer"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && login()}
         />
-        <button className="btn" onClick={login}>Login</button>
-        <button className="btn" onClick={signup}>Sign Up</button>
+        {error && <p className="error-message">{error}</p>}
+        <button className="btn" onClick={login} disabled={loading}>
+          {loading ? "Loading..." : "Login"}
+        </button>
+        <button className="btn" onClick={signup} disabled={loading}>
+          {loading ? "Loading..." : "Sign Up"}
+        </button>
       </div>
     </div>
   );

@@ -207,6 +207,15 @@
   margin-left: 1rem;
 }
 
+.error-message {
+  color: #ff6b6b;
+  font-size: 0.9em;
+  margin: 0.5em 0;
+}
 
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 
 
