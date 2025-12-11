@@ -6,7 +6,7 @@ export default function SearchBar({ onSelect }) {
 
   async function search() {
     try {
-        const proxy = "https://cors-anywhere.herokuapp.com/";
+        const proxy = "https://corsproxy.io/?";
         const res = await fetch(`${proxy}https://api.deezer.com/search?q=${query}`);
     
         if (!res.ok) {
